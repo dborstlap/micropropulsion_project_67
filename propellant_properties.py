@@ -28,27 +28,32 @@ def get_propellant_density(fluid_name, pressure_Pa, temperature_K):
     float or str: The density of the propellant in kg/m^3, or an error message if the calculation fails.
     """
 
-    # Calculate the density
-    density = CP.PropsSI('D', 'P', pressure_Pa, 'T', temperature_K, fluid_name)
+    try: 
+        # Calculate the density
+        density = CP.PropsSI('D', 'P', pressure_Pa, 'T', temperature_K, fluid_name)
 
-    # Determine the phase
-    phase = CP.PropsSI('Phase', 'P', pressure_Pa, 'T', temperature_K, fluid_name)
-    
-    # Convert phase number to human-readable state
-    state_list = ["unknown", "liquid", "gas", "supercritical liquid", "supercritical gas", "supercritical fluid"]
-    state = state_list[int(phase)] if 0 <= phase <= 5 else "unknown"
+        # Determine the phase
+        phase = CP.PropsSI('Phase', 'P', pressure_Pa, 'T', temperature_K, fluid_name)
+        
+        # Convert phase number to human-readable state
+        state_list = ["unknown", "liquid", "gas", "supercritical liquid", "supercritical gas", "supercritical fluid"]
+        state = state_list[int(phase)] if 0 <= phase <= 5 else "unknown"
 
-    return density, state
+        return density, state
+
+    except:
+        return '', ''
 
 
 
 # Example usage
-fluids = ['R134a', 'Nitrogen', 'Argon', 'SF6', 'Butane', 'R236fa', 'SO2', 'Isobutane', 'Xenon']
-tank_pressure = 50 * 1e5 #Pa
-temperature_K = 300 #K
+if __name__ == "__main__":
+    fluids = ['R134a', 'Nitrogen', 'Argon', 'SF6', 'Butane', 'R236fa', 'SO2', 'Isobutane', 'Xenon']
+    tank_pressure = 50 * 1e5 #Pa
+    temperature_K = 300 #K
 
-for fluid in fluids:
-    density, state = get_propellant_density(fluid, tank_pressure, temperature_K)
+    for fluid in fluids:
+        density, state = get_propellant_density(fluid, tank_pressure, temperature_K)
 
-    print(f"The density of {fluid} at {tank_pressure/1e5} bar and {temperature_K} K is {density:.2f} kg/m^3")
-    print(state)
+        print(f"The density of {fluid} at {tank_pressure/1e5} bar and {temperature_K} K is {density:.2f} kg/m^3")
+        print(state)
